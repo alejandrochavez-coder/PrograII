@@ -1,76 +1,79 @@
+#include "inverse_kinematics.hpp"
 #include <iostream>
-#include "grid.h"
-#include "cinematica.h"
 #include "vector2d.h"
-#include "recursion.h"
 
-int main() {
-    std::cout << "=== SIMULADOR DE BRAZO ROBOTICO ===\n\n";
+struct Segment {
+    Vector2D root;
+    Vector2D target;
+    double length;
+};
 
-    int columns;
-    std::cout << "Ingrese numero de columnas (M): "; 
-    std::cin >> columns;
+void segments_reach_targets(Segment* segments, size_t segment_count) {
 
-    int rows;
-    std::cout << "Ingrese numero de filas (N): ";  
-    std::cin >> rows;
+    for (size_t i = 0; i < segment_count; i++) {
+        Segment& segment = segments[i];
 
-    char** grid = create_grid(rows, columns);
-    place_obstacles(grid, rows, columns);
+        Vector2D direction = vector_subtract(segment.root, segment.target);
+        direction = vector_normalize(direction);
 
-    float xActual = 0, yActual = 0;
-    Vector2D current_position{0, 0};
+        Vector2D offset = vector_multiply(direction, segment.length);
+        segment.root = vector_add(segment.target, offset);
 
-    int current_column = columns;
-    int current_row = rows;
-
-    std::cout << "\nGrilla inicial:\n";
-    draw_grid(grid, rows, columns);
-
-    char continuar = 's';
-    while (continuar == 's' || continuar == 'S') {
-
-        float first_angle, second_angle, first_length, second_length;
-        std::cout << "\n--- Nuevo movimiento ---\n";
-
-        std::cout << "Primer angulo (sexahesimales): "; 
-        std::cin >> first_angle;
-
-        std::cout << "Segundo angulo (sexahesimales): "; 
-        std::cin >> second_angle;
-
-        std::cout << "Longitud L1: "; 
-        std::cin >> first_length;
-
-        std::cout << "Longitud L2: "; 
-        std::cin >> second_length;
-
-        Vector2D target_position = direct_kinematic(first_angle, second_angle, first_length, second_length);
-        std::cout << "\nPosicion calculada: " << vector_to_string(target_position) << std::endl;
-
-        int filaDestino, colDestino;
-        map_to_grid(target_position, filaDestino, colDestino, rows, columns);
-        std::cout << "Posicion en grilla: fila = " << filaDestino << ", columna = " << colDestino << "\n";
-
-        std::cout << "\nVerificando trayectoria...\n";
-        if (is_trayectory_safe(grid, xActual, yActual, target_position, 3, rows, columns)) {
-            std::cout << "Trayectoria segura. Moviendo robot...\n";
-            actualizarPosicionRobot(grid, current_row, current_column, filaDestino, colDestino);
-            xActual = target_position.x;
-            yActual = target_position.y;
-            current_row = filaDestino; current_column = colDestino;
-        } else {
-            std::cout << "Movimiento rechazado: la trayectoria no es segura.\n";
-        }
-
-        std::cout << "\nGrilla actual:\n";
-        draw_grid(grid, rows, columns);
-
-        std::cout << "\nDesea ingresar otro movimiento? (s/n): ";
-        std::cin >> continuar;
     }
 
-    liberarGrilla(grid, rows);
-    std::cout << "\nSimulacion finalizada.\n";
+}
+
+void segments_offset(Segment* segments, size_t segment_count, const Vector2D& offset) {
+
+    for (size_t i = 0; i < segment_count; i++) {
+
+        Segment& segment = segments[i];
+
+        segment.root = vector_add(segment.root, offset);
+        segment.target = vector_add(segment.target, offset);
+
+    }
+
+}
+
+Segment* create_segments(size_t segment_count, const Vector2D& origin, const Vector2D& direction) {
+    
+    Segment* segments = (Segment*)malloc(sizeof(Segment) * segment_count);
+
+    for (size_t i = 0; i < segment_count; i++) {
+
+        segments[i] = Segment {
+            .root = vector_add(origin, vector_multiply(direction, segment_count - i)),
+            .target = vector_add(origin, vector_multiply(direction, segment_count - i - 1)),
+            .length = (double)(i)
+        };
+
+    }
+
+    return segments;
+}
+
+int main() {
+
+    // Vector2D direction = Vector2D{0, 1};
+    // Vector2D anchor = Vector2D{4, 4};
+    // size_t segment_count = 4;
+
+    // Segment* segments = create_segments(segment_count, anchor, direction);
+    // Vector2D offset = vector_subtract(anchor, segments[segment_count - 1].root);
+
+    // segments_reach_targets(segments, segment_count);
+    // segments_offset(segments, segment_count, offset);
+
+    ik::Instance instance = ik::create_instance();
+
+    ik::destroy_instance(instance);
+    
+    while (true) {
+
+    }
+    // free(segments);
+
     return 0;
+
 }

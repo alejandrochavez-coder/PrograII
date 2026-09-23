@@ -5,3 +5,4 @@
 CMakePresets.json
 /build
 Makefile
+/output

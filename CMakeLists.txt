@@ -6,9 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(InverseKinematics
     main.cpp
-    grid.h
-    grid.cpp
-    cinematica.cpp
-    recursion.cpp
     vector2d.h
+    inverse_kinematics.cpp
+    inverse_kinematics.hpp
 )
