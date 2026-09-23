@@ -1,0 +1,7 @@
+/.vs
+/out
+/.vscode
+/.idea
+CMakePresets.json
+/build
+Makefile
