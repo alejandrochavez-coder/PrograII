@@ -2,10 +2,10 @@
 
 // Reserva memoria dinamica para la grilla (FILAS x COLUMNAS),
 // la llena con '.' y coloca la base 'B' en el centro.
-char** crearGrilla(int rows, int columns);
+char** create_grid(int rows, int columns);
 
 // Coloca obstaculos '#' en posiciones fijas.
-void colocarObstaculos(char** grilla, int rows, int columns);
+void place_obstacles(char** grilla, int rows, int columns);
 
 // Imprime la grilla en consola.
 void draw_grid(char** grilla, int rows, int columns);

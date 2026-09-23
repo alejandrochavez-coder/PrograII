@@ -3,15 +3,15 @@
 #include "grid.h"
 using namespace std;
 
-bool trayectoriaEsSegura(char** grilla, float x1, float y1, float x2, float y2,
+bool is_trayectory_safe(char** grilla, float x1, float y1, const Vector2D& target_position,
                           int profundidad, int rows, int columns) {
     int fila, columna;
-    mapearAGrilla(x2, y2, fila, columna, rows, columns);
+    map_to_grid(target_position, fila, columna, rows, columns);
     if (!movimientoValido(grilla, fila, columna, rows, columns)) return false;
 
     if (profundidad <= 0) return true; // caso base: paso ya es suficientemente fino
 
-    float xm = (x1 + x2) / 2.0f, ym = (y1 + y2) / 2.0f;
-    return trayectoriaEsSegura(grilla, x1, y1, xm, ym, profundidad - 1, rows, columns)
-        && trayectoriaEsSegura(grilla, xm, ym, x2, y2, profundidad - 1, rows, columns);
+    float xm = (x1 + target_position.x) / 2.0f, ym = (y1 + target_position.y) / 2.0f;
+    return is_trayectory_safe(grilla, x1, y1, target_position, profundidad - 1, rows, columns)
+        && is_trayectory_safe(grilla, xm, ym, target_position, profundidad - 1, rows, columns);
 }

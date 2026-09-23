@@ -1,7 +1,7 @@
 #include "grid.h"
 #include <iostream>
 
-char** crearGrilla(int rows, int columns) {
+char** create_grid(int rows, int columns) {
     char** grilla = new char*[rows];
     for (int i = 0; i < rows; i++) {
 
@@ -14,7 +14,7 @@ char** crearGrilla(int rows, int columns) {
     return grilla;
 }
 
-void colocarObstaculos(char** grilla, int rows, int columns) {
+void place_obstacles(char** grilla, int rows, int columns) {
     int obstaculos[3][2] = { {1, 1}, {2, columns - 3}, {rows - 2, 2} };
     for (int i = 0; i < 3; i++) {
         int f = obstaculos[i][0], c = obstaculos[i][1];

@@ -1,6 +1,7 @@
 #include <iostream>
 #include "grid.h"
 #include "cinematica.h"
+#include "vector2d.h"
 #include "recursion.h"
 
 int main() {
@@ -14,10 +15,12 @@ int main() {
     std::cout << "Ingrese numero de filas (N): ";  
     std::cin >> rows;
 
-    char** grid = crearGrilla(rows, columns);
-    colocarObstaculos(grid, rows, columns);
+    char** grid = create_grid(rows, columns);
+    place_obstacles(grid, rows, columns);
 
     float xActual = 0, yActual = 0;
+    Vector2D current_position{0, 0};
+
     int current_column = columns;
     int current_row = rows;
 
@@ -42,20 +45,19 @@ int main() {
         std::cout << "Longitud L2: "; 
         std::cin >> second_length;
 
-        float xDestino, yDestino;
-        cinematicaDirecta(first_angle, second_angle, first_length, second_length, xDestino, yDestino);
-        std::cout << "\nPosicion calculada: x = " << xDestino << ", y = " << yDestino << "\n";
+        Vector2D target_position = direct_kinematic(first_angle, second_angle, first_length, second_length);
+        std::cout << "\nPosicion calculada: " << vector_to_string(target_position) << std::endl;
 
         int filaDestino, colDestino;
-        mapearAGrilla(xDestino, yDestino, filaDestino, colDestino, rows, columns);
+        map_to_grid(target_position, filaDestino, colDestino, rows, columns);
         std::cout << "Posicion en grilla: fila = " << filaDestino << ", columna = " << colDestino << "\n";
 
         std::cout << "\nVerificando trayectoria...\n";
-        if (trayectoriaEsSegura(grid, xActual, yActual, xDestino, yDestino, 3, rows, columns)) {
+        if (is_trayectory_safe(grid, xActual, yActual, target_position, 3, rows, columns)) {
             std::cout << "Trayectoria segura. Moviendo robot...\n";
             actualizarPosicionRobot(grid, current_row, current_column, filaDestino, colDestino);
-            xActual = xDestino; 
-            yActual = yDestino;
+            xActual = target_position.x;
+            yActual = target_position.y;
             current_row = filaDestino; current_column = colDestino;
         } else {
             std::cout << "Movimiento rechazado: la trayectoria no es segura.\n";

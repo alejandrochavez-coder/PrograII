@@ -1,5 +1,7 @@
 #pragma once
+
 #include <cmath>
+#include <string>
 
 struct Vector2D {
     double x, y;
@@ -39,4 +41,8 @@ inline Vector2D vector_subtract(const Vector2D& a, const Vector2D& b) {
 
 inline bool vector_is_normalized(const Vector2D& vector) {
     return std::abs(vector_length_squared(vector) - 1) < 0.000001;
+}
+
+inline std::string vector_to_string(const Vector2D& vector) {
+    return "(x = " + std::to_string(vector.x) + ", z = " + std::to_string(vector.y) + " )";
 }
