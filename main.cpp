@@ -1,63 +1,74 @@
 #include <iostream>
-#include "globals.h"
-#include "grilla.h"
+#include "grid.h"
 #include "cinematica.h"
 #include "recursion.h"
-using namespace std;
-
-int FILAS, COLUMNAS, FILA_BASE, COL_BASE; // definicion de las globales
 
 int main() {
-    cout << "=== SIMULADOR DE BRAZO ROBOTICO ===\n\n";
-    cout << "Ingrese numero de filas (N): ";  cin >> FILAS;
-    cout << "Ingrese numero de columnas (M): "; cin >> COLUMNAS;
-    FILA_BASE = FILAS / 2;
-    COL_BASE  = COLUMNAS / 2;
+    std::cout << "=== SIMULADOR DE BRAZO ROBOTICO ===\n\n";
 
-    char** grilla = crearGrilla();
-    colocarObstaculos(grilla);
+    int columns;
+    std::cout << "Ingrese numero de columnas (M): "; 
+    std::cin >> columns;
+
+    int rows;
+    std::cout << "Ingrese numero de filas (N): ";  
+    std::cin >> rows;
+
+    char** grid = crearGrilla(rows, columns);
+    colocarObstaculos(grid, rows, columns);
 
     float xActual = 0, yActual = 0;
-    int filaActual = FILA_BASE, colActual = COL_BASE;
+    int current_column = columns;
+    int current_row = rows;
 
-    cout << "\nGrilla inicial:\n";
-    imprimirGrilla(grilla);
+    std::cout << "\nGrilla inicial:\n";
+    draw_grid(grid, rows, columns);
 
     char continuar = 's';
     while (continuar == 's' || continuar == 'S') {
-        float theta1, theta2, L1, L2;
-        cout << "\n--- Nuevo movimiento ---\n";
-        cout << "Angulo theta1 (grados): "; cin >> theta1;
-        cout << "Angulo theta2 (grados): "; cin >> theta2;
-        cout << "Longitud L1: "; cin >> L1;
-        cout << "Longitud L2: "; cin >> L2;
+
+        float first_angle, second_angle, first_length, second_length;
+        std::cout << "\n--- Nuevo movimiento ---\n";
+
+        std::cout << "Primer angulo (sexahesimales): "; 
+        std::cin >> first_angle;
+
+        std::cout << "Segundo angulo (sexahesimales): "; 
+        std::cin >> second_angle;
+
+        std::cout << "Longitud L1: "; 
+        std::cin >> first_length;
+
+        std::cout << "Longitud L2: "; 
+        std::cin >> second_length;
 
         float xDestino, yDestino;
-        cinematicaDirecta(theta1, theta2, L1, L2, xDestino, yDestino);
-        cout << "\nPosicion calculada: x = " << xDestino << ", y = " << yDestino << "\n";
+        cinematicaDirecta(first_angle, second_angle, first_length, second_length, xDestino, yDestino);
+        std::cout << "\nPosicion calculada: x = " << xDestino << ", y = " << yDestino << "\n";
 
         int filaDestino, colDestino;
-        mapearAGrilla(xDestino, yDestino, filaDestino, colDestino);
-        cout << "Posicion en grilla: fila = " << filaDestino << ", columna = " << colDestino << "\n";
+        mapearAGrilla(xDestino, yDestino, filaDestino, colDestino, rows, columns);
+        std::cout << "Posicion en grilla: fila = " << filaDestino << ", columna = " << colDestino << "\n";
 
-        cout << "\nVerificando trayectoria...\n";
-        if (trayectoriaEsSegura(grilla, xActual, yActual, xDestino, yDestino, 3)) {
-            cout << "Trayectoria segura. Moviendo robot...\n";
-            actualizarPosicionRobot(grilla, filaActual, colActual, filaDestino, colDestino);
-            xActual = xDestino; yActual = yDestino;
-            filaActual = filaDestino; colActual = colDestino;
+        std::cout << "\nVerificando trayectoria...\n";
+        if (trayectoriaEsSegura(grid, xActual, yActual, xDestino, yDestino, 3, rows, columns)) {
+            std::cout << "Trayectoria segura. Moviendo robot...\n";
+            actualizarPosicionRobot(grid, current_row, current_column, filaDestino, colDestino);
+            xActual = xDestino; 
+            yActual = yDestino;
+            current_row = filaDestino; current_column = colDestino;
         } else {
-            cout << "Movimiento rechazado: la trayectoria no es segura.\n";
+            std::cout << "Movimiento rechazado: la trayectoria no es segura.\n";
         }
 
-        cout << "\nGrilla actual:\n";
-        imprimirGrilla(grilla);
+        std::cout << "\nGrilla actual:\n";
+        draw_grid(grid, rows, columns);
 
-        cout << "\nDesea ingresar otro movimiento? (s/n): ";
-        cin >> continuar;
+        std::cout << "\nDesea ingresar otro movimiento? (s/n): ";
+        std::cin >> continuar;
     }
 
-    liberarGrilla(grilla);
-    cout << "\nSimulacion finalizada.\n";
+    liberarGrilla(grid, rows);
+    std::cout << "\nSimulacion finalizada.\n";
     return 0;
 }
