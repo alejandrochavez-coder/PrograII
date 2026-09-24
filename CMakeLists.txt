@@ -9,4 +9,5 @@ add_executable(InverseKinematics
     vector2d.h
     inverse_kinematics.cpp
     inverse_kinematics.hpp
+    dynamic_array.h
 )

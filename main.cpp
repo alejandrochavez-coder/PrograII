@@ -10,36 +10,33 @@ void print_vector(const Vector2D& vector) {
 
 int main() {
 	ik::Instance instance = ik::create_instance();
-	ik::append(instance, Vector2D{10, 0});
+	ik::append(instance, Vector2D{0, 1});
+    ik::append(instance, Vector2D{0, 1});
 	const Vector2D anchor{0, 0};
 
 	while (true) {
-		ik::reach_target(instance, Vector2D{-10, 0});
+		ik::reach_target(instance, Vector2D{0, -2});
 		
-		// Vector2D offset = vector_subtract(anchor, ik::root(instance));
-		// ik::offset(instance, offset);
+		Vector2D offset = vector_subtract(anchor, ik::root(instance));
+		ik::offset(instance, offset);
 
-		// ik::Segment* segments = array(ik::Segment);
-		// size_t segment_count;
+		size_t segment_count;
+		ik::enumerate_segments(instance, segment_count, nullptr);
 
-		// ik::enumerate_segments(instance, segment_count, nullptr);
-		// array_reserve(segments, segment_count);
+		ik::Segment* segments = array_allocate(ik::Segment, segment_count);
+		ik::enumerate_segments(instance, segment_count, segments);
 
-		// ik::enumerate_segments(instance, segment_count, segments);
+		for (size_t i = 0; i < segment_count; i++) {
 
-		// for (size_t i = 0; i < array_size(segments); i++) {
+			ik::Segment& segment = segments[i];
+			print_vector(segment.root_position);
+            print_vector(segment.tip_position);
 
-		// 	ik::Segment& segment = segments[i];
-		// 	print_vector(segment.root_position);
+		}
 
-		// }
-
-		// ik::Segment& tip = segments[segment_count - 1];
-		// print_vector(tip.tip_position);
-		print_vector(Vector2D{10, 10});
+        std::cout << std::endl;
 	}
 
 	ik::destroy_instance(instance);
-
 	return 0;
 }

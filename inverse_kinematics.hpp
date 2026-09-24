@@ -7,6 +7,7 @@ namespace ik {
 struct Segment {
 	Vector2D root_position;
 	Vector2D tip_position;
+	double length;
 };
 
 typedef struct Instance_T* Instance;

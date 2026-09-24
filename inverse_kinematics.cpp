@@ -41,6 +41,7 @@ void append(Instance instance, const Vector2D& line) {
 
     segment.root_position = tip;
     segment.tip_position = vector_add(tip, line);
+    segment.length = vector_length(line);
 
     array_append(instance->segments, segment);
 }
@@ -49,21 +50,21 @@ void reach_target(Instance instance, const Vector2D& target) {
 
     Vector2D current_target = target;
 
-    for (size_t i = array_size(instance->segments) - 1; i >= 0; i--) {
-        std::cout << i << std::endl;
+    for (int i = array_size(instance->segments) - 1; i >= 0; i--) {
 
         Segment& segment = instance->segments[i];
-        double length = vector_length(vector_subtract(segment.tip_position, segment.root_position));
 
         Vector2D direction = vector_subtract(segment.root_position, current_target);
         direction = vector_normalize(direction);
 
-        Vector2D offset = vector_multiply(direction, length);
+        Vector2D offset = vector_multiply(direction, segment.length);
         segment.root_position = vector_add(current_target, offset);
         segment.tip_position = current_target;
 
         current_target = segment.root_position;
+
     }
+
 }
 
 void offset(Instance instance, Vector2D offset) {
@@ -71,7 +72,7 @@ void offset(Instance instance, Vector2D offset) {
 
         Segment& segment = instance->segments[i];
         segment.root_position = vector_add(segment.root_position, offset);
-
+        segment.tip_position = vector_add(segment.tip_position, offset);
     }
 }
 

@@ -18,7 +18,8 @@ typedef struct {
 #define array_type(array) void*
 #endif
 
-#define array(T) (T*)create_array(sizeof(T), 1)
+#define array(T) (T*)dynamic_array_create(sizeof(T), 1)
+#define array_allocate(T, n) (T*)dynamic_array_create(sizeof(T), n)
 #define array_data(array) ((ArrayData*)(array) - 1)
 #define array_size(array) array_data(array)->size
 #define array_capacity(array) array_data(array)->capacity
@@ -30,7 +31,7 @@ typedef struct {
 
 #define array_free(array) free(array_data(array))
 
-static inline void* create_array(size_t element_size, size_t capacity) {
+static inline void* dynamic_array_create(size_t element_size, size_t capacity) {
 	size_t size = sizeof(ArrayData) + (element_size * capacity);
 	ArrayData* data = (ArrayData*)malloc(size);
 
