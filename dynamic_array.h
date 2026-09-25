@@ -1,6 +1,6 @@
 #pragma once
 
-//Sources
+//Resources used
 //https://www.bytesbeneath.com/p/dynamic-arrays-in-c?utm_source=publication-search
 
 #include <stddef.h>
@@ -12,6 +12,7 @@ typedef struct {
 	size_t size;
 } ArrayData;
 
+//C++ Compatibility
 #ifdef __cplusplus
 #define array_type(array) decltype(&(array[0]))
 #else

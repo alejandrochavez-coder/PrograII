@@ -9,7 +9,7 @@ struct Instance_T {
     Segment* segments;
 };
 
-Instance create_instance() {
+Instance instance() {
     Instance_T* instance = new Instance_T{};
     instance->segments = array(Segment);
 
@@ -88,7 +88,7 @@ void enumerate_segments(Instance instance, size_t& out_count, Segment* out_ptr) 
     }
 }
 
-void destroy_instance(Instance instance) {
+void destroy(Instance instance) {
     array_free(instance->segments);
     free(instance);
 }

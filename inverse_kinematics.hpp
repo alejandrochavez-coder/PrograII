@@ -12,7 +12,7 @@ struct Segment {
 
 typedef struct Instance_T* Instance;
 
-Instance create_instance();
+Instance instance();
 
 Vector2D tip(Instance instance);
 
@@ -26,6 +26,6 @@ void offset(Instance instance, Vector2D offset);
 
 void enumerate_segments(Instance instance, size_t& out_count, Segment* out_ptr);
 
-void destroy_instance(Instance instance);
+void destroy(Instance instance);
 
 }

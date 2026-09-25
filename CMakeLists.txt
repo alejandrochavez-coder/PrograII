@@ -10,4 +10,7 @@ add_executable(InverseKinematics
     inverse_kinematics.cpp
     inverse_kinematics.hpp
     dynamic_array.h
+    canvas.hpp
+    canvas.cpp
+    dynamics.hpp
 )
