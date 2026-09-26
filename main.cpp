@@ -53,8 +53,14 @@ int main() {
 	Vector2D target = Vector2D{0, 0};
 	Vector2D origin = Vector2D{0, 0};
 
-	int width = 161;
-	int height = 41;
+	int width;
+	int height;
+
+	std::cout << "Grosor";
+	std::cin >> width;
+
+	std::cout << "Altura";
+	std::cin >> height;
 
 	double rotations_per_second = 1;
 
